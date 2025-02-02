@@ -1,3 +1,5 @@
 poetry.lock
 # ignore all virtual envs
 venv/
+# ignore .env file bc it stores secrets
+.env
