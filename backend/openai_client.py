@@ -7,6 +7,7 @@ import json
 #  load API key 
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+LLM_MODEL = os.getenv("LLM_MODEL", "gpt-4o-mini")
 
 # initialize OpenAI client
 client = openai.OpenAI(api_key=OPENAI_API_KEY)
@@ -14,7 +15,7 @@ client = openai.OpenAI(api_key=OPENAI_API_KEY)
 def query_openai(user_input: str):
     try: 
         response = client.chat.completions.create(
-            model="gpt-4o-mini",
+            model=LLM_MODEL,
             messages= constants.LLM_INSTRUCTION_MESSAGES + [ {
             "role": "user",
             "content": [
