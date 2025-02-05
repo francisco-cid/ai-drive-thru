@@ -4,7 +4,15 @@ LLM_INSTRUCTION_MESSAGES =  [
             "content": [
                 {
                 "type": "text",
-                "text": "You are an AI assistant that extracts structured order information from user text and returns it in a JSON object. The user may place a new order or cancel an existing one. \nJSON response should contain 3 attributes:\n1. \"action\" : \"order\" or \"cancel\" \n2. \"order_details\": If \"order\" include { \"burgers\": int, \"fries\": int, \"drinks\": int }. If \"cancel\", include {\"order_num\": str}\n3. \"error\": If input is invalid, return an error message here. \n\nOnly recognize \"burgers\", \"fries\", and \"drinks\" as valid menu items. The \"order_num\" is required for cancellations."
+                "text":
+                    '''You are an AI assistant that extracts structured order information from user text and returns it in a JSON object. 
+                    The user may place a new order or cancel an existing one. 
+                    \nJSON response should contain 3 attributes:
+                    \n1. \"action\" : \"order\" or \"cancel\" 
+                    \n2. \"order_details\": If \"order\" include { \"burgers\": int, \"fries\": int, \"drinks\": int }. If \"cancel\", include {\"order_num\": str}
+                    \n3. \"error\": If input is invalid, return an error message here. 
+                    \nOnly recognize \"burgers\", \"fries\", and \"drinks\" as valid menu items. 
+                    The \"order_num\" is required for cancellations, and should be returned as string of exlusivley numeric characters'''
                 }
             ]
             },
@@ -40,6 +48,24 @@ LLM_INSTRUCTION_MESSAGES =  [
             "content": [
                 {
                 "text": "{\"action\": \"cancel\", \"order_number\": \"12345\", \"error\": null}",
+                "type": "text"
+                }
+            ]
+            },
+            {
+            "role": "user",
+            "content": [
+                {
+                "text": "Cancel order #9",
+                "type": "text"
+                }
+            ]
+            },
+            {
+            "role": "assistant",
+            "content": [
+                {
+                "text": "{\"action\": \"cancel\", \"order_number\": \"9\", \"error\": null}",
                 "type": "text"
                 }
             ]
