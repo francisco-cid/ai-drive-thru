@@ -1,3 +1,32 @@
+# Francisco's Notes:
+
+## 🚀 How to Run the Application
+
+1. **Clone the repository** and navigate to the project root.
+2. **Set up backend**:
+   ```sh
+   cd backend
+   python -m venv venv
+   source venv/bin/activate  # On Windows use: venv\\Scripts\\activate
+   pip install -r requirements.txt
+   ```
+3. **Create a `.env` file** in `backend/` with your OpenAI API key (model preference is optional):
+   ```env
+   OPENAI_API_KEY=your-api-key-here
+   LLM_MODEL=gpt-4o  # Optional (defaults to gpt-4o)
+   ```
+4. **Run the backend**:
+   ```sh
+   python main.py
+   ```
+5. **Set up and run frontend**:
+   ```sh
+   cd frontend
+   npm install
+   npm run dev
+   ```
+✅ Now, open `http://localhost:5173/` to use the application!
+
 # Instructions
 
 Create a mock drive thru ordering system that allows users to place and cancel their orders using AI.
