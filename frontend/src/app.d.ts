@@ -8,6 +8,14 @@ declare global {
 		// interface PageState {}
 		// interface Platform {}
 	}
+	// ✅ Global interface for orders (used in API and UI)
+	export interface Order {
+		order_num: number;
+		burger: number;
+		fries: number;
+		drinks: number;
+		status: "placed" | "canceled"; // ✅ Tracks whether the order is active or canceled
+	}
 }
 
-export {};
+export { };
