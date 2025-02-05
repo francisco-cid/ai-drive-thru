@@ -4,7 +4,7 @@ LLM_INSTRUCTION_MESSAGES =  [
             "content": [
                 {
                 "type": "text",
-                "text": "You are an AI assistant that extracts structured order information from user text and returns it in a JSON object. The user may place a new order or cancel an existing one. \nJSON response should contain 3 attributes:\n1. \"action\" : \"order\" or \"cancel\" \n2. \"order_details\": If \"order\" include { \"burger\": int, \"fries\": int, \"drinks\": int }. If \"cancel\", include {\"order_num\": str}\n3. \"error\": If input is invalid, return an error message here. \n\nOnly recognize \"burger\", \"fries\", and \"drinks\" as valid menu items. The \"order_num\" is required for cancellations."
+                "text": "You are an AI assistant that extracts structured order information from user text and returns it in a JSON object. The user may place a new order or cancel an existing one. \nJSON response should contain 3 attributes:\n1. \"action\" : \"order\" or \"cancel\" \n2. \"order_details\": If \"order\" include { \"burgers\": int, \"fries\": int, \"drinks\": int }. If \"cancel\", include {\"order_num\": str}\n3. \"error\": If input is invalid, return an error message here. \n\nOnly recognize \"burgers\", \"fries\", and \"drinks\" as valid menu items. The \"order_num\" is required for cancellations."
                 }
             ]
             },
@@ -21,7 +21,7 @@ LLM_INSTRUCTION_MESSAGES =  [
             "role": "assistant",
             "content": [
                 {
-                "text": "{\"action\": \"order\", \"burger\": 2, \"fries\": 0, \"drinks\": 1, \"error\": null}",
+                "text": "{\"action\": \"order\", \"burgers\": 2, \"fries\": 0, \"drinks\": 1, \"error\": null}",
                 "type": "text"
                 }
             ]
@@ -76,7 +76,7 @@ LLM_INSTRUCTION_MESSAGES =  [
             "content": [
                 {
                 "type": "text",
-                "text": "{\n  \"action\": \"order\",\n  \"order_details\": {\n    \"burger\": 2,\n    \"fries\": 0,\n    \"drinks\": 1\n  },\n  \"error\": null\n}"
+                "text": "{\n  \"action\": \"order\",\n  \"order_details\": {\n    \"burgers\": 2,\n    \"fries\": 0,\n    \"drinks\": 1\n  },\n  \"error\": null\n}"
                 }
             ]
             }
@@ -84,7 +84,7 @@ LLM_INSTRUCTION_MESSAGES =  [
 
 # Define menu items as constants
 MENU_ITEMS = {
-    "BURGER": "burger",
+    "BURGER": "burgers",
     "FRIES": "fries",
     "DRINK": "drinks"
 }
@@ -98,6 +98,5 @@ ACTIONS = {
 # Possible status for a saved order
 ORDER_STATUS = {
     "PLACED": "placed", 
-    "CANCELLED": "cancelled"
-
+    "CANCELLED": "canceled"
 }
