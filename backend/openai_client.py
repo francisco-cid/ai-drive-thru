@@ -7,7 +7,7 @@ import json
 #  load API key 
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-LLM_MODEL = os.getenv("LLM_MODEL", "gpt-4o-mini")
+LLM_MODEL = os.getenv("LLM_MODEL", "gpt-4o")
 
 # initialize OpenAI client
 client = openai.OpenAI(api_key=OPENAI_API_KEY)
