@@ -3,22 +3,57 @@
     import { Input } from "$lib/components/ui/input";
     import { Button } from "$lib/components/ui/button";
     import OrderHistory from "./OrderHistory.svelte";
-    // define types for state variables
-    let orderMessage: string = "";
-    let totalBurgers: number = 0;
-    let totalFries: number = 0;
-    let totalDrinks: number = 0;
+    import { postOrder, fetchOrders } from "$lib/api";
 
-    // let orders: Order[] = [];
-    let orders: Order[] = [
-        { order_num: 1, burger: 2, fries: 1, drinks: 0, status: "placed" },
-        { order_num: 2, burger: 1, fries: 0, drinks: 2, status: "placed" },
-        { order_num: 3, burger: 0, fries: 1, drinks: 1, status: "canceled" }, // Should be filtered out
-        { order_num: 4, burger: 3, fries: 2, drinks: 1, status: "placed" },
-    ];
-    function submitOrder() {
-        console.log("order submitted");
-        orderMessage = ""; // clear input after submission
+    // states received as props from +page.ts
+    export let orders: Order[];
+    export let totalBurgers: number;
+    export let totalFries: number;
+    export let totalDrinks: number;
+
+    let orderMessage: string = ""; // user input
+    let errorMessage: string | null = null; // tracks errors
+
+    // let orders: Order[] = [
+    //     { order_num: 1, burgers: 2, fries: 1, drinks: 0, status: "placed" },
+    //     { order_num: 2, burgers: 1, fries: 0, drinks: 2, status: "placed" },
+    //     { order_num: 3, burgers: 0, fries: 1, drinks: 1, status: "canceled" }, // Should be filtered out
+    //     { order_num: 4, burgers: 3, fries: 2, drinks: 1, status: "placed" },
+    // ];
+    // called after order successfuly placed to refresh history and counts
+    async function loadOrders() {
+        console.log("LOADORDERS RUNNING");
+        try {
+            const data = await fetchOrders();
+            // TODO check data.success and data.error
+            orders = data.orders;
+            totalBurgers = data.total_burgers;
+            totalFries = data.total_fries;
+            totalDrinks = data.total_drinks;
+            errorMessage = null;
+        } catch (error) {
+            console.error("Failed to refresh orders:", error);
+            errorMessage = "Failed to load orders. Please try again.";
+        }
+    }
+
+    // called on submit to place order
+    async function submitOrder() {
+        console.log("submitOrder being called");
+        if (!orderMessage.trim()) return;
+        try {
+            const response = await postOrder(orderMessage);
+            if (response.success) {
+                orderMessage = "";
+                await loadOrders(); // ✅ Refresh orders after submission
+            } else {
+                console.error("Order failed:", response.error);
+                errorMessage = response.error;
+            }
+        } catch (error) {
+            console.error("API error:", error);
+            errorMessage = "Failed to place order. Please try again.";
+        }
     }
 </script>
 
@@ -51,4 +86,5 @@
 
     <!-- Row 3: Order History -->
     <OrderHistory {orders} />
+    <!-- TODO display error message? -->
 </div>

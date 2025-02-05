@@ -20,7 +20,7 @@
     // formats entire items list correctly
     const formatOrderItems = (order: Order): string =>
         [
-            formatItemLabel("burger", order.burger),
+            formatItemLabel("burger", order.burgers),
             formatItemLabel("fry", order.fries),
             formatItemLabel("drink", order.drinks),
         ]
