@@ -5,31 +5,27 @@
     import OrderHistory from "./OrderHistory.svelte";
     import { postOrder, fetchOrders } from "$lib/api";
 
-    // states received as props from +page.ts
-    export let orders: Order[];
-    export let totalBurgers: number;
-    export let totalFries: number;
-    export let totalDrinks: number;
+    // props received from load function
+    export let data: {
+        orders: Order[];
+        totalBurgers: number;
+        totalFries: number;
+        totalDrinks: number;
+    };
+    let { orders, totalBurgers, totalFries, totalDrinks } = data;
 
     let orderMessage: string = ""; // user input
     let errorMessage: string | null = null; // tracks errors
 
-    // let orders: Order[] = [
-    //     { order_num: 1, burgers: 2, fries: 1, drinks: 0, status: "placed" },
-    //     { order_num: 2, burgers: 1, fries: 0, drinks: 2, status: "placed" },
-    //     { order_num: 3, burgers: 0, fries: 1, drinks: 1, status: "canceled" }, // Should be filtered out
-    //     { order_num: 4, burgers: 3, fries: 2, drinks: 1, status: "placed" },
-    // ];
     // called after order successfuly placed to refresh history and counts
     async function loadOrders() {
-        console.log("LOADORDERS RUNNING");
         try {
             const data = await fetchOrders();
-            // TODO check data.success and data.error
+            // update states with fresh data
             orders = data.orders;
-            totalBurgers = data.total_burgers;
-            totalFries = data.total_fries;
-            totalDrinks = data.total_drinks;
+            totalBurgers = data.total_items_count.burgers;
+            totalFries = data.total_items_count.fries;
+            totalDrinks = data.total_items_count.drinks;
             errorMessage = null;
         } catch (error) {
             console.error("Failed to refresh orders:", error);
@@ -39,7 +35,6 @@
 
     // called on submit to place order
     async function submitOrder() {
-        console.log("submitOrder being called");
         if (!orderMessage.trim()) return;
         try {
             const response = await postOrder(orderMessage);
@@ -51,7 +46,7 @@
                 errorMessage = response.error;
             }
         } catch (error) {
-            console.error("API error:", error);
+            console.error("Fetch error:", error);
             errorMessage = "Failed to place order. Please try again.";
         }
     }
@@ -75,13 +70,16 @@
     </div>
 
     <!-- Row 2: Order Input Box -->
-    <div class="flex gap-4">
+    <div class="flex items-center gap-4">
         <Input
             bind:value={orderMessage}
-            class="flex-1 p-4"
+            class="flex-1 p-4 h-20 text-lg"
             placeholder="Ex: &quot;I would like 1 burger & fries&quot;"
         />
-        <Button class="p-4" on:click={submitOrder}>Run</Button>
+        <Button
+            class="w-16 h-16 rounded-full text-lg flex items-center justify-center bg-blue-600 hover:bg-blue-700"
+            on:click={submitOrder}>Run</Button
+        >
     </div>
 
     <!-- Row 3: Order History -->
