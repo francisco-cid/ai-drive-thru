@@ -3,6 +3,7 @@
     import OrderForm from "./components/OrderForm.svelte";
     import ItemCounter from "./components/ItemCounter.svelte";
     import ErrorAlert from "$lib/components/custom/ErrorAlert.svelte";
+    import { Utensils, CupSoda, Sandwich, ChefHat } from "lucide-svelte";
     import { postOrder, fetchOrders } from "$lib/api";
 
     // props received from load function
@@ -56,19 +57,41 @@
     }
 </script>
 
-<!-- Error alert positioned in the top right -->
-<ErrorAlert {errorMessage} />
-<div class="container mx-auto p-6 space-y-6">
-    <!-- Row 1: Totals -->
-    <div class="grid grid-cols-3 gap-4">
-        <ItemCounter label="Total # of Burgers" count={totalBurgers} />
-        <ItemCounter label="Total # of Fries" count={totalFries} />
-        <ItemCounter label="Total # of Drinks" count={totalDrinks} />
+<div
+    class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-200 text-gray-900 pt-4"
+>
+    <!-- Title -->
+    <h1
+        class="text-4xl font-bold text-center mb-4 text-gray-800 flex items-center justify-center gap-2"
+    >
+        <Utensils size={36} class="text-gray-700" /> AI Drive-Thru
+    </h1>
+    <!-- Error alert positioned in the top right -->
+    <ErrorAlert {errorMessage} />
+    <div class="container mx-auto p-6 space-y-6">
+        <!-- Row 1: Totals -->
+        <div class="grid grid-cols-3 gap-4">
+            <ItemCounter
+                label="Total # of Burgers"
+                count={totalBurgers}
+                Icon={Sandwich}
+            />
+            <ItemCounter
+                label="Total # of Fries"
+                count={totalFries}
+                Icon={ChefHat}
+            />
+            <ItemCounter
+                label="Total # of Drinks"
+                count={totalDrinks}
+                Icon={CupSoda}
+            />
+        </div>
+
+        <!-- Row 2: Order Input Box -->
+        <OrderForm bind:orderMessage onSubmit={submitOrder} />
+
+        <!-- Row 3: Order History -->
+        <OrderHistory {orders} />
     </div>
-
-    <!-- Row 2: Order Input Box -->
-    <OrderForm bind:orderMessage onSubmit={submitOrder} />
-
-    <!-- Row 3: Order History -->
-    <OrderHistory {orders} />
 </div>
