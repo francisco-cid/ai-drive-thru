@@ -4,7 +4,7 @@ import { fetchOrders } from "$lib/api";
 import type { PageLoad } from "./$types";
 
 export const load: PageLoad = async ({ fetch }) => {
-    console.log("Load function... Running on:", import.meta.env.SSR ? "Server" : "Client");
+    // console.log("Load function... Running on:", import.meta.env.SSR ? "Server" : "Client");
     try {
         const response = await fetchOrders(fetch);
         return {

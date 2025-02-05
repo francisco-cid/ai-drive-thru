@@ -9,7 +9,7 @@ export async function postOrder(userInput: string) {
             body: JSON.stringify({ user_txt: userInput }),
         });
         if (!response.ok) {
-            throw new Error(`API Error: ${response.status} ${response.statusText}`);
+            throw new Error(`Fetch Error: ${response.status} ${response.statusText}`);
         }
         return await response.json();
     } catch (err) {
@@ -22,18 +22,14 @@ export async function postOrder(userInput: string) {
 // called from both client side component and +page.ts load function
 export async function fetchOrders(customFetch?: typeof fetch) {
     // use provided fetch if available (when called from server), otherwise use window.fetch
-    console.log('customFetch?', customFetch ? 'yes' : 'no')
     const fetchFn = customFetch ?? fetch;
-    console.log('fetchFN', fetchFn)
     try {
         const response = await fetchFn(`${BASE_URL}/orders`);
         if (!response.ok) {
-            throw new Error(`API Error: ${response.status} ${response.statusText}`);
+            throw new Error(`Fetch Error: ${response.status} ${response.statusText}`);
         }
         return await response.json();
     } catch (err) {
-        // TODO improve error logs avoid duplicates
-        console.error("Failed to fetch orders:", err);
         throw err;
     }
 }
