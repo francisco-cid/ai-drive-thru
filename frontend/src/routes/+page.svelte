@@ -1,13 +1,8 @@
 <script lang="ts">
-    import { Card } from "$lib/components/ui/card";
-    import { Input } from "$lib/components/ui/input";
-    import { Button } from "$lib/components/ui/button";
-    import {
-        Alert,
-        AlertTitle,
-        AlertDescription,
-    } from "$lib/components/ui/alert";
-    import OrderHistory from "./OrderHistory.svelte";
+    import OrderHistory from "./components/OrderHistory.svelte";
+    import OrderForm from "./components/OrderForm.svelte";
+    import ItemCounter from "./components/ItemCounter.svelte";
+    import ErrorAlert from "$lib/components/custom/ErrorAlert.svelte";
     import { postOrder, fetchOrders } from "$lib/api";
 
     // props received from load function
@@ -62,45 +57,18 @@
 </script>
 
 <!-- Error alert positioned in the top right -->
-{#if errorMessage}
-    <div class="fixed top-4 right-4 z-50 w-96">
-        <Alert variant="destructive">
-            <AlertTitle>Error</AlertTitle>
-            <AlertDescription>{errorMessage}</AlertDescription>
-        </Alert>
-    </div>
-{/if}
+<ErrorAlert {errorMessage} />
 <div class="container mx-auto p-6 space-y-6">
     <!-- Row 1: Totals -->
     <div class="grid grid-cols-3 gap-4">
-        <Card class="p-6 text-center">
-            <p class="text-lg font-semibold">Total # of Burgers</p>
-            <p class="text-2xl">{totalBurgers}</p>
-        </Card>
-        <Card class="p-6 text-center">
-            <p class="text-lg font-semibold">Total # of fries</p>
-            <p class="text-2xl">{totalFries}</p>
-        </Card>
-        <Card class="p-6 text-center">
-            <p class="text-lg font-semibold">Total # of drinks</p>
-            <p class="text-2xl">{totalDrinks}</p>
-        </Card>
+        <ItemCounter label="Total # of Burgers" count={totalBurgers} />
+        <ItemCounter label="Total # of Fries" count={totalFries} />
+        <ItemCounter label="Total # of Drinks" count={totalDrinks} />
     </div>
 
     <!-- Row 2: Order Input Box -->
-    <div class="flex items-center gap-4">
-        <Input
-            bind:value={orderMessage}
-            class="flex-1 p-4 h-20 text-lg"
-            placeholder="Ex: &quot;I would like 1 burger & fries&quot;"
-        />
-        <Button
-            class="w-16 h-16 rounded-full text-lg flex items-center justify-center bg-blue-600 hover:bg-blue-700"
-            on:click={submitOrder}>Run</Button
-        >
-    </div>
+    <OrderForm bind:orderMessage onSubmit={submitOrder} />
 
     <!-- Row 3: Order History -->
     <OrderHistory {orders} />
-    <!-- TODO display error message? -->
 </div>
