@@ -43,12 +43,16 @@ def create_order(order_details):
 
 def cancel_order(order_num):
     if order_num in orders_db:
+        # check if already cancelled
+        if orders_db[order_num]["status"] == ORDER_STATUS["CANCELLED"]:
+            # success with message
+            return {"success": True, "message": f"Order {order_num} was already canceled."}
         # decrease total counts to reflect cancellation
         for item in MENU_ITEMS.values():
             total_items_count[item] -= orders_db[order_num]["items"][item]
         # mark order as cancelled
         orders_db[order_num]["status"] = ORDER_STATUS["CANCELLED"]
-        return {"success": True, "message": f"Order {order_num} cancelled successfully"}
+        return {"success": True, "message": f"Order {order_num} canceled successfully"}
     # Order not found → Raise 404
     raise HTTPException(status_code=404, detail=f"Order {order_num} not found")
         
