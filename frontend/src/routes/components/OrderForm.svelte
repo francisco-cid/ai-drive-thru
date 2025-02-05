@@ -26,7 +26,6 @@
     <Button
         type="submit"
         class="w-16 h-16 rounded-full text-lg flex items-center justify-center bg-blue-600 hover:bg-blue-700"
-        on:click={onSubmit}
         disabled={isLoading}
     >
         {#if isLoading}
