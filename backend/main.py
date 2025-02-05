@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from openai_client import query_openai
 from constants import MENU_ITEMS, ACTIONS, ORDER_STATUS
+from fastapi.middleware.cors import CORSMiddleware
 
 # request structure for placing/cancelling order
 class OrderRequest(BaseModel):
@@ -9,6 +10,14 @@ class OrderRequest(BaseModel):
 
 app = FastAPI()
 
+# configure CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"], 
+)
 # in-memory dictionary to store placed orders
 orders_db = {}
 # tracks total number of menu items ordered
@@ -67,7 +76,9 @@ async def order(request: OrderRequest):
 # returns all placed orders and current counts of ordered menu items
 @app.get("/orders")
 async def get_orders():
-    return {"success": True, "orders": orders_db, "total_items_count": total_items_count }
+    # convert orders dictionary to list
+    orders_list = [{"order_num": order_num, "status": order_data["status"], **order_data["items"]} for order_num, order_data in orders_db.items()]
+    return {"success": True, "orders": orders_list, "total_items_count": total_items_count }
 
 if __name__ == "__main__":
     import uvicorn
