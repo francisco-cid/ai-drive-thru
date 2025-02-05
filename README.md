@@ -1,4 +1,5 @@
 # Francisco's Notes:
+<img width="1802" alt="Screenshot 2025-02-05 at 11 18 35 AM" src="https://github.com/user-attachments/assets/e1ec1639-0533-4241-9894-daaa15ff6009" />
 
 ## 🚀 How to Run the Application
 
