@@ -9,11 +9,12 @@ export async function postOrder(userInput: string) {
             body: JSON.stringify({ user_txt: userInput }),
         });
         if (!response.ok) {
-            throw new Error(`Fetch Error: ${response.status} ${response.statusText}`);
+            const errorData = await response.json();
+            const errorMessage = errorData.detail ? `API Error: ${errorData.detail}` : `Fetch Error: HTTP ${response.status} ${response.statusText}`;
+            throw new Error(errorMessage);
         }
         return await response.json();
     } catch (err) {
-        console.error("Failed to place order:", err);
         throw err // rethrow so caller can handle it
     }
 }
@@ -26,7 +27,7 @@ export async function fetchOrders(customFetch?: typeof fetch) {
     try {
         const response = await fetchFn(`${BASE_URL}/orders`);
         if (!response.ok) {
-            throw new Error(`Fetch Error: ${response.status} ${response.statusText}`);
+            throw new Error(`Fetch Error: HTTP ${response.status} ${response.statusText}`);
         }
         return await response.json();
     } catch (err) {

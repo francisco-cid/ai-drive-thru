@@ -15,6 +15,7 @@ export const load: PageLoad = async ({ fetch }) => {
         }
     } catch (error) {
         console.error("Failed to fetch initial orders:", error)
+        // TODO handle this more gracefully - display message to user instead of just 0 orders
         return { orders: [], totalBurgers: 0, totalFries: 0, totalDrinks: 0 }
     }
 }

@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from openai_client import query_openai
 from constants import MENU_ITEMS, ACTIONS, ORDER_STATUS
@@ -49,8 +49,8 @@ def cancel_order(order_num):
         # mark order as cancelled
         orders_db[order_num]["status"] = ORDER_STATUS["CANCELLED"]
         return {"success": True, "message": f"Order {order_num} cancelled successfully"}
-    else:
-        return {"success": False, "error": f"Order {order_num} not found"}
+    # Order not found → Raise 404
+    raise HTTPException(status_code=404, detail=f"Order {order_num} not found")
         
 
 # translates user input as a valid action and returns fulfilled order or cancellation
@@ -60,7 +60,7 @@ async def order(request: OrderRequest):
     llm_resp = query_openai(request.user_txt)
     # check for errors returned by LLM
     if "error" in llm_resp and llm_resp["error"]:
-        return {"success": False, "error": llm_resp["error"] }
+        raise HTTPException(status_code=400, detail=f"LLM - {llm_resp['error']}")
     
     user_action = llm_resp.get("action")
     order_details = llm_resp.get("order_details", {})
@@ -71,7 +71,7 @@ async def order(request: OrderRequest):
         order_num = order_details.get("order_num")
         return cancel_order(order_num)
     # handle case where LLM returns no error and no valid user action
-    return {"success": False, "error": "Invalid action received from LLM"}
+    raise HTTPException(status_code=400, detail="Invalid action received from LLM")
 
 # returns all placed orders and current counts of ordered menu items
 @app.get("/orders")

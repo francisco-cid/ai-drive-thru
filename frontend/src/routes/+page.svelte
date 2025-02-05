@@ -2,6 +2,11 @@
     import { Card } from "$lib/components/ui/card";
     import { Input } from "$lib/components/ui/input";
     import { Button } from "$lib/components/ui/button";
+    import {
+        Alert,
+        AlertTitle,
+        AlertDescription,
+    } from "$lib/components/ui/alert";
     import OrderHistory from "./OrderHistory.svelte";
     import { postOrder, fetchOrders } from "$lib/api";
 
@@ -38,20 +43,33 @@
         if (!orderMessage.trim()) return;
         try {
             const response = await postOrder(orderMessage);
-            if (response.success) {
-                orderMessage = "";
-                await loadOrders(); // ✅ Refresh orders after submission
-            } else {
-                console.error("Order failed:", response.error);
-                errorMessage = response.error;
-            }
+            // clear user input after success
+            orderMessage = "";
+            await loadOrders(); // Refresh orders after submission
+            errorMessage = "";
         } catch (error) {
-            console.error("Fetch error:", error);
-            errorMessage = "Failed to place order. Please try again.";
+            console.error("Error in submitOrder:", error);
+            // show only errors coming directly from API logic, everything else gets a generic message
+            if (error instanceof Error) {
+                errorMessage = error.message.startsWith("API Error")
+                    ? error.message // Show our backend/LLM error messages
+                    : "Something went wrong. Please try again."; // Generic error for non-API issues
+            } else {
+                errorMessage = "Something went wrong. Please try again.";
+            }
         }
     }
 </script>
 
+<!-- Error alert positioned in the top right -->
+{#if errorMessage}
+    <div class="fixed top-4 right-4 z-50 w-96">
+        <Alert variant="destructive">
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>{errorMessage}</AlertDescription>
+        </Alert>
+    </div>
+{/if}
 <div class="container mx-auto p-6 space-y-6">
     <!-- Row 1: Totals -->
     <div class="grid grid-cols-3 gap-4">

@@ -1,5 +1,6 @@
 <script lang="ts">
     import { Card } from "$lib/components/ui/card";
+    import { fade, slide } from "svelte/transition";
     // orders prop
     export let orders: Order[] = [];
     // filtered list of orders to be displayed
@@ -32,13 +33,17 @@
     <h2 class="text-lg font-semibold">Order History</h2>
     {#if activeOrders.length > 0}
         <div class="grid gap-2">
-            {#each activeOrders as order}
-                <Card class="p-4 flex justify-between items-center border">
-                    <span> Order #{order.order_num}</span>
-                    <span class="text-sm text-muted-foreground">
-                        {formatOrderItems(order)}
-                    </span>
-                </Card>
+            {#each activeOrders as order (order.order_num)}
+                <div transition:fade={{ duration: 500 }}>
+                    <Card
+                        class="p-4 flex justify-between items-center border hover:bg-gray-100"
+                    >
+                        <span class="text-md"> Order #{order.order_num}</span>
+                        <span class="text-md text-muted-foreground">
+                            {formatOrderItems(order)}
+                        </span>
+                    </Card>
+                </div>
             {/each}
         </div>
     {:else}
